@@ -11,6 +11,11 @@ on:
       - 'Silicon/**'
       - 'Silicium-ACPI'
   workflow_dispatch:
+    inputs:
+      release:
+        type: boolean
+        required: true
+        default: false
   pull_request:
     types: [opened, reopened]
     paths:
@@ -26,6 +31,8 @@ env:
 jobs:
   build:
     runs-on: ubuntu-24.04
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - name: Build UEFI for active devices
@@ -37,3 +44,10 @@ jobs:
           name: uefi-images
           path: ./Mu-*
           compression-level: 9
+
+      - name: Release UEFI images
+        uses: softprops/action-gh-release@v3
+        if: inputs.release && github.ref_type == 'tag'
+        with:
+          files: |
+            ./Mu-*
