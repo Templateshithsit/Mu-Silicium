@@ -36,13 +36,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build UEFI for active devices
-        run: bash ./setup_env.sh -p apt && bash ./build_active_devices.sh -r DEBUG
+        run: bash ./setup_env.sh -p apt && bash ./build_active_devices.sh
 
       - name: Upload UEFI images
         uses: actions/upload-artifact@v4
         with:
           name: uefi-images
-          path: ./Mu-*
+          path: Build/pipaPkg/*_CLANGPDB/FV/*.fd
           compression-level: 9
 
       - name: Release UEFI images
